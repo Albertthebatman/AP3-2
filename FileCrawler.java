@@ -18,9 +18,12 @@ public class FileCrawler {
 			/** convert pattern to regex */
 			pattern = Regex.cvtPattern(args[0]);
 			
-			/** directory to search in (optional) */
+			/** directory to search in (optional)
+			 * defualt to current if not set */
 			if(args.length==2)
 				directory = args[1];
+			else
+				directory = ".";
 		
 			
 			/** no of threads
@@ -33,7 +36,26 @@ public class FileCrawler {
 			/** Loop through adding each directory to work */
 			findDirectories(directory,workQueue);
 			
-			System.out.println(workQueue);
+			/** STATIC VERSION
+			 * find matching file names in each directory in workQueue
+			 */
+			File srcDir;
+			for(int i=0;i<workQueue.getSize();i++){
+				/** for each directory */
+				String srcDirStr = workQueue.getWork();
+				srcDir = new File(srcDirStr);
+				String files[] = srcDir.list();
+				for(String curFile:files){
+					File testDir = new File(srcDirStr + "/" + curFile);
+					if(!testDir.isDirectory()){
+						/** for each file in dir */
+						if(Regex.match(curFile, pattern))
+							System.out.println(curFile);
+					}
+				}
+			}
+			
+			//System.out.println(workQueue);
 		}
 	}
 	

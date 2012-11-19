@@ -42,6 +42,14 @@ public class Regex {
 		pat.append('$');
 		return new String(pat);
 	}
+	
+	public static boolean match(String fileName, String pattern){
+		Pattern patternReg = Pattern.compile(pattern);
+		
+		Matcher m = patternReg.matcher(fileName);
+		
+		return m.matches();
+	}
 
 	// simple main program - expects bash pattern in Arg[0]
 	// after creating the RegEx string and constructing a Pattern,
