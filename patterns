@@ -1,0 +1,23 @@
+The directory tree against which you can test your implementation is rooted
+at the directory named "files".  The directory names and file names in the tree
+have been generated using a random number generator.
+
+The following command lines assume that fileCrawler.class, any other class
+files upon which fileCrawler depends, files and P*.out are contained in
+the current working directory.  If no output results from execution of
+a particular command, then your class is generating the correct output.
+
+java -cp . fileCrawler '*' files | diff - P1.out
+java -cp . fileCrawler '*.c' files | diff - P2.out
+java -cp . fileCrawler '*.[ch]' files | diff - P3.out
+java -cp . fileCrawler 'a?*.java' files | diff - P4.out
+java -cp . fileCrawler '???????' files | diff - P5.out
+
+N.B. If you are building and testing on Windows/cygwin, you will have to
+     use the following command lines:
+
+java -cp . fileCrawler "'*'" files | dos2unix | diff - P1.out
+java -cp . fileCrawler "'*.c'" files | dos2unix | diff - P2.out
+java -cp . fileCrawler "'*.[ch]'" files | dos2unix | diff - P3.out
+java -cp . fileCrawler "'a?*.java'" files | dos2unix | diff - P4.out
+java -cp . fileCrawler "'???????'" files | dos2unix | diff - P5.out
