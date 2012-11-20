@@ -7,7 +7,8 @@ public class FileCrawler {
 		String pattern = null;
 		String directory = null;
 		int noThreads = 0;
-		WorkQueue workQueue = new WorkQueue();
+		WorkQueue workQueue = new WorkQueue();		//Storage for work queue
+		MatchQueue matchQueue = new MatchQueue();	//Storage for match queue
 		
 		/** assign program parameters */
 		if(args.length < 1 || args.length > 2){
@@ -36,26 +37,41 @@ public class FileCrawler {
 			/** Loop through adding each directory to work */
 			findDirectories(directory,workQueue);
 			
-			/** STATIC VERSION
-			 * find matching file names in each directory in workQueue
-			 */
-			File srcDir;
+			
+			/** Start threads 
+			Thread[] threads = new Thread[noThreads];
+			for(int i=0;i<noThreads;i++){
+				threads[i] = new Thread(new WorkerThread(workQueue,matchQueue,pattern));
+				threads[i].start();
+			}
+			
+			/** When threads finish, join together 
+			for(int i=0;i<noThreads;i++){
+				try{
+					threads[i].join();
+				} catch(InterruptedException e){
+					
+				}
+			}*/
+			
+			/** Single threaded implementation */
 			for(int i=0;i<workQueue.getSize();i++){
-				/** for each directory */
-				String srcDirStr = workQueue.getWork();
-				srcDir = new File(srcDirStr);
+				String currentWork = workQueue.getWork();
+				File srcDir = new File(currentWork);
 				String files[] = srcDir.list();
-				for(String curFile:files){
-					File testDir = new File(srcDirStr + "/" + curFile);
-					if(!testDir.isDirectory()){
-						/** for each file in dir */
-						if(Regex.match(curFile, pattern))
-							System.out.println(curFile);
-					}
+				for(String file:files){
+					File testFile = new File(file);
+						if(!testFile.isDirectory()){
+						/** file is not a directory, regex match */
+						if(Regex.match(file, pattern))
+							matchQueue.add(currentWork + "/" + file);
+						}
 				}
 			}
 			
-			//System.out.println(workQueue);
+			/** Display matchQueue */
+			matchQueue.display();
+
 		}
 	}
 	
