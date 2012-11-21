@@ -57,20 +57,34 @@ public class FileCrawler {
 			/** Single threaded implementation */
 			for(int i=0;i<workQueue.getSize();i++){
 				String currentWork = workQueue.getWork();
-				File srcDir = new File(currentWork);
+				File srcDir = null;
+				
+				try{
+					srcDir = new File(currentWork);
+				} catch(Exception e){
+					System.out.println("Cannot access");
+				}
+				
 				String files[] = srcDir.list();
+				File testFile = null;
+				
 				for(String file:files){
-					File testFile = new File(file);
+					try{
+						testFile = new File(currentWork + "/" + file);
+					} catch(Exception e){
+						System.out.println("Cannot access");
+					}
 						if(!testFile.isDirectory()){
-						/** file is not a directory, regex match */
-						if(Regex.match(file, pattern))
-							matchQueue.add(currentWork + "/" + file);
+							/** file is not a directory, regex match */
+							if(Regex.match(file, pattern))
+								matchQueue.add(currentWork + "/" + file);
 						}
 				}
 			}
 			
+			System.out.println(workQueue);
 			/** Display matchQueue */
-			matchQueue.display();
+			//matchQueue.display();
 
 		}
 	}
