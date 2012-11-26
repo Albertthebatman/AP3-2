@@ -14,8 +14,8 @@ public class WorkQueue {
 	}
 	
 	/** add directory to work queue, notify any sleeping threads */
-	public synchronized void add(String dir){
-		workQueue.offer(dir);
+	public synchronized boolean add(String dir){
+		return workQueue.offer(dir);
 	}
 	
 	public int getSize(){
@@ -34,7 +34,7 @@ public class WorkQueue {
 			return workQueue.poll();
 	}
 	
-	public String toString(){
+	/*public String toString(){
 		String dirs = null;
 		
 		while(workQueue.peek()!=null){
@@ -44,5 +44,5 @@ public class WorkQueue {
 		
 		return dirs;
 	
-	}
+	}*/
 }

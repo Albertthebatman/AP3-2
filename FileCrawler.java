@@ -56,7 +56,7 @@ public class FileCrawler {
 			}*/
 
 			/** Single threaded implementation */
-			for(int i=0;i<workQueue.getSize();i++){
+			while(workQueue.getSize()>0){
 				String currentWork = workQueue.getWork();
 				File srcDir = null;
 
@@ -83,9 +83,8 @@ public class FileCrawler {
 				}
 			}
 
-			System.out.println(workQueue);
 			/** Display matchQueue */
-			//matchQueue.display();
+			matchQueue.display();
 
 		}
 	}
@@ -95,12 +94,12 @@ public class FileCrawler {
 		try {
 			File file = new File(currentDirectory); // create a File object
 			if (file.isDirectory()) { // a directory - could be symlink
-				System.out.println("## - " + currentDirectory + " is directory");
+				//System.out.println("## - " + currentDirectory + " is directory");
 				String entries[] = file.list();
 				if (entries != null) { // not a symlink
-					System.out.println("## - " + currentDirectory + " is not symlink");
-					workQueue.add(currentDirectory);
-					workQueue.add("files");
+					//System.out.println("## - " + currentDirectory + " is not symlink");
+					if(!workQueue.add(currentDirectory))
+						System.out.println("FUCK MY LIFE");
 					for (String entry : entries ) {
 						if (entry.compareTo(".") == 0)
 							continue;
@@ -111,7 +110,7 @@ public class FileCrawler {
 				}
 			} else {
 				//buggggyfix
-				System.out.println("## - " + currentDirectory + " is not a dir.");
+				//System.out.println("## - " + currentDirectory + " is not a dir.");
 			}
 		} catch (Exception e) {
 			System.err.println("Error processing "+currentDirectory+": "+e);
