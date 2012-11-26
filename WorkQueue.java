@@ -1,21 +1,21 @@
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class WorkQueue {
-	private ConcurrentLinkedQueue<String> workQueue;
+	private LinkedBlockingQueue<String> workQueue;
 	
 	public WorkQueue(){
-		workQueue = new ConcurrentLinkedQueue<String>();
+		workQueue = new LinkedBlockingQueue<String>();
 	}
 	
-	public ConcurrentLinkedQueue<String> getQueue(){
+	public LinkedBlockingQueue<String> getQueue(){
 		return workQueue;
 	}
 	
 	/** add directory to work queue, notify any sleeping threads */
 	public synchronized void add(String dir){
-		workQueue.add(dir);
-		notifyAll();
+		workQueue.offer(dir);
 	}
 	
 	public int getSize(){
@@ -31,14 +31,16 @@ public class WorkQueue {
 				
 			}
 		
-			return workQueue.remove();
+			return workQueue.poll();
 	}
 	
 	public String toString(){
 		String dirs = null;
 		
-		for(int i=0;i<workQueue.size();i++)
-			dirs = dirs + "\n" + workQueue.remove();
+		while(workQueue.peek()!=null){
+			dirs = dirs + "\n" + workQueue.poll();
+			
+		}
 		
 		return dirs;
 	
